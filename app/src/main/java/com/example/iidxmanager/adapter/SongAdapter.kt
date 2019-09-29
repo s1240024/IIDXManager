@@ -7,17 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.example.iidxmanager.databinding.ActivitySongListBinding
+import com.example.iidxmanager.entity.Song
 
-class SongAdapter(val context: Context) : BaseAdapter() {
+class SongAdapter(private val context: Context, private var songs: List<Song>) : BaseAdapter() {
     private val inflater = LayoutInflater.from(context)
-    private val songs = mutableListOf<String>()
 
     override fun getCount(): Int {
-        return songs.count()
+        return songs.size
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
-        return convertView
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
+        val binding: ActivitySongListBinding?
+
+        if (convertView == null) {
+            binding = ActivitySongListBinding.inflate(inflater, parent, false)
+            binding.root.tag = binding
+        } else {
+            binding = convertView.tag as ActivitySongListBinding
+        }
+
+        binding?.song = getItem(position) as Song
+        return binding?.root
     }
 
     override fun getItem(position: Int): Any {
@@ -25,6 +36,6 @@ class SongAdapter(val context: Context) : BaseAdapter() {
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return songs[position].id.toLong()
     }
 }
